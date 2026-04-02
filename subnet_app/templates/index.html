@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subnet Calculator</title>
+</head>
+<body>
+
+    <!-- <h1>Subnet Calculator Working</h1> -->
+
+<h2>IPv4 Subnet Calculator</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="ip" placeholder="Enter IP">
+    <input type="text" name="subnet" placeholder="Enter subnet">
+    <button type="submit">Calculate</button>
+</form>
+
+{% if result %}
+    {% if result.error %}
+        <p style="color:red;">{{ result.error }}</p>
+    {% else %}
+        <h3>Results:</h3>
+        <p>Network: {{ result.network_address }}</p>
+        <p>Broadcast: {{ result.broadcast_address }}</p>
+        <p>First Host: {{ result.first_host }}</p>
+        <p>Last Host: {{ result.last_host }}</p>
+        <p>Total Hosts: {{ result.total_hosts }}</p>
+        <p>Subnet Mask: {{ result.subnet_mask }}</p>
+        <p>CIDR: /{{ result.cidr }}</p>
+    {% endif %}
+{% endif %}
+
+</body>
+</html>
