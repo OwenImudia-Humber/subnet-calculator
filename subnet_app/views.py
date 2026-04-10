@@ -1,13 +1,23 @@
 from django.shortcuts import render
+
 from .utils import calculate_subnet
 
-# Create your views here.
+
 def index(request):
     result = None
-    if request.method == 'POST':
-        ip = request.POST.get('ip')
-        subnet = request.POST.get('subnet')
+    ip_value = ""
+    subnet_value = ""
+    if request.method == "POST":
+        ip_value = request.POST.get("ip") or ""
+        subnet_value = request.POST.get("subnet") or ""
+        result = calculate_subnet(ip_value, subnet_value)
 
-        result = calculate_subnet(ip, subnet)
-
-    return render(request, 'index.html', {"result": result})
+    return render(
+        request,
+        "index.html",
+        {
+            "result": result,
+            "ip_value": ip_value,
+            "subnet_value": subnet_value,
+        },
+    )

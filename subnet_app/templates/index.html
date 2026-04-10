@@ -1,35 +1,79 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Subnet Calculator</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IPv4 Subnet Calculator</title>
+  <link rel="stylesheet" href="{% static 'subnet_app/style.css' %}">
 </head>
 <body>
+  <header>
+    <h1>IPv4 Subnet Calculator</h1>
+  </header>
+  <main>
+    <form method="post" action="{% url 'home' %}">
+      {% csrf_token %}
+      <label>
+        IPv4 address
+        <input type="text" name="ip" value="{{ ip_value }}" placeholder="e.g. 192.168.1.10" autocomplete="off">
+      </label>
+      <label>
+        Subnet (CIDR or netmask)
+        <input type="text" name="subnet" value="{{ subnet_value }}" placeholder="24, /24, or 255.255.255.0" autocomplete="off">
+      </label>
+      <button type="submit">Calculate</button>
+    </form>
 
-    <!-- <h1>Subnet Calculator Working</h1> -->
-
-<h2>IPv4 Subnet Calculator</h2>
-
-<form method="POST">
-    {% csrf_token %}
-    <input type="text" name="ip" placeholder="Enter IP">
-    <input type="text" name="subnet" placeholder="Enter subnet">
-    <button type="submit">Calculate</button>
-</form>
-
-{% if result %}
-    {% if result.error %}
-        <p style="color:red;">{{ result.error }}</p>
-    {% else %}
-        <h3>Results:</h3>
-        <p>Network: {{ result.network_address }}</p>
-        <p>Broadcast: {{ result.broadcast_address }}</p>
-        <p>First Host: {{ result.first_host }}</p>
-        <p>Last Host: {{ result.last_host }}</p>
-        <p>Total Hosts: {{ result.total_hosts }}</p>
-        <p>Subnet Mask: {{ result.subnet_mask }}</p>
-        <p>CIDR: /{{ result.cidr }}</p>
+    {% if result %}
+      {% if result.error %}
+        <p class="error" role="alert">{{ result.error }}</p>
+      {% else %}
+        <section class="results" aria-label="Subnet calculation results">
+          <h2>Results</h2>
+          <table>
+            <tbody>
+              <tr>
+                <th scope="row">Network address</th>
+                <td>{{ result.network_address }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Broadcast address</th>
+                <td>{{ result.broadcast_address }}</td>
+              </tr>
+              <tr>
+                <th scope="row">First usable host</th>
+                <td>{{ result.first_host }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Last usable host</th>
+                <td>{{ result.last_host }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Usable host addresses</th>
+                <td>{{ result.total_hosts }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Total addresses in subnet</th>
+                <td>{{ result.num_addresses }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Subnet mask</th>
+                <td>{{ result.subnet_mask }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Wildcard mask</th>
+                <td>{{ result.wildcard_mask }}</td>
+              </tr>
+              <tr>
+                <th scope="row">CIDR prefix</th>
+                <td>/{{ result.cidr }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      {% endif %}
     {% endif %}
-{% endif %}
-
+  </main>
 </body>
 </html>
